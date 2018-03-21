@@ -1,0 +1,288 @@
+@font-face {
+    font-family: 'avenir-next';
+    src: url("../assets/fonts/Avenir_Next_W00_400.woff2");
+}
+
+html, body{
+    font-family: 'avenir-next' !important;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#map {
+    height: 100%;
+    margin: 0 0 0 0;
+    padding: 0;
+}
+
+.leaflet-control-attribution {
+    display: none;
+}
+
+.loading-indicator {
+    /* Loading status */
+    display    : none;
+    height     : 100%;
+    width      : 100%;
+    z-index    : 500;
+    position   : absolute;
+    top        : 0;
+    left       : 0;
+    overflow   : hidden;
+    background : #fff;
+}
+
+.app-loading .loading-indicator,
+.app-error .loading-indicator {
+    /* Show this class when loading or error */
+    pointer-events : none;
+    display        : inline-flex;
+    cursor         : wait;
+}
+
+.app-loading .loading-indicator {
+    /* Loading image */
+    background : url(../images/loading.gif) no-repeat center center;
+}
+
+#sidebar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 400px;
+    padding: 0;
+    background-color: #333;
+}
+
+#control-dashboard{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 350px;
+    z-index: 100;
+}
+
+#control-dashboard hr{
+    margin: 15px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+.summary-info b {
+    font-weight: 700;
+}
+
+.charts-container {
+    background: #EEE;
+    border-top: 1px solid #DDD;
+}
+
+.trips-by-month-chart-wrap {
+    width: 100%;
+}
+
+#trips-by-month-chart-div {
+    height: 100px;
+    width: 100%;
+    /* background-color: #999; */
+}
+
+.payment-chart-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+#payment-chart-div {
+    height: 80px;
+    width: 40%;
+    margin-left: 5%;
+}
+
+#payment-chart-legend-div{
+    height: 80px;
+    width: 50%;
+}
+
+#payment-chart-legend-div > .legend-item {
+    display:flex;
+    align-items:center;
+}
+
+#payment-chart-legend-div  .legend-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+}
+
+#payment-chart-legend-div  .legend-icon.by-card{
+    background-color: #98abc5;
+}
+
+#payment-chart-legend-div  .legend-icon.by-cash{
+    background-color: #8a89a6;
+}
+
+#payment-chart-legend-div  span {
+    line-height: 12px;
+}
+
+#tips-chart-div {
+    width: 100%;
+    height: 20px;
+    background-color: #fff;
+    display:flex;
+    align-items:center;
+}
+
+#tips-chart-bar {
+    width: 50%;
+    height: 100%;
+    background-color: #7F6D6D;
+} 
+
+.tips-chart-label {
+    font-size: 12px;
+}
+
+/* .legend-container {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: stretch;
+} */
+
+/* .legend-container > div {
+    width: 20%;
+    text-align: center;
+    font-size: 0.65rem;
+    height: 30px;
+    line-height: 30px;
+} */
+
+.legend-container {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 100;
+    background: #fff;
+    min-width: 150px;
+}
+
+.legend-container  div {
+    padding: 0 .5rem;
+}
+
+.legend-container  hr {
+    margin: .5rem 0;
+}
+
+.legend-container > div.legend-item {
+    height: 24px;
+    line-height: 24px;
+}
+
+.legend-container .legend-label {
+    font-size: 0.65rem;
+    color: #202020;
+}
+
+.legend-container > div.size-info > div{
+    width: 40px;
+}
+
+.legend-container.pickup > div.color-info-0{
+    background-color: rgba(229,245,224,.9);
+}
+
+.legend-container.pickup > div.color-info-1{
+    background-color: rgba(199,233,192,.9);
+}
+
+.legend-container.pickup > div.color-info-2{
+    background-color: rgba(161,217,155,0.9);
+}
+
+.legend-container.pickup > div.color-info-3{
+    background-color: rgba(116,196,118,0.9);
+}
+
+.legend-container.pickup > div.color-info-4{
+    background-color: rgba(65,171,93,0.9);
+}
+
+.legend-container.dropoff > div.color-info-0{
+    background-color: rgba(222,235,247,.9);
+}
+
+.legend-container.dropoff > div.color-info-1{
+    background-color: rgba(198,219,239,.9);
+}
+
+.legend-container.dropoff > div.color-info-2{
+    background-color: rgba(158,202,225,0.9);
+}
+
+.legend-container.dropoff > div.color-info-3{
+    background-color: rgba(107,174,214,0.9);
+}
+
+.legend-container.dropoff > div.color-info-4{
+    background-color: rgba(66,146,198,0.9);
+}
+
+/* #legend-container {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(255,255,255,.6);
+    height: 150px;
+    width: 200px;
+    z-index: 100;
+} */
+
+.select-menu-options > div {
+    cursor: pointer;
+}
+
+.select-menu-options > div.active {
+    color: #fff;
+    font-weight: 600;
+}
+
+span.small {
+    font-size: .65rem;
+}
+
+/* .app-title-text span[class^='icon-ui'] {
+
+} */
+
+.transparent {
+    background-color: rgba(0,0,0,0);
+    box-shadow: none;
+}
+
+.bar {
+    fill: steelblue;
+}
+
+.bar:hover {
+    fill: brown;
+}
+
+.axis path, 
+.axis line {
+    fill: none;
+    stroke: #999;
+    shape-rendering: crispEdges; 
+}
+
+.axis text {
+    fill: #909090;
+}

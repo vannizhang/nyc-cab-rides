@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>NYC Cab Rides</title>
+    <link rel="icon" href="//www.esri.com/favicon.ico">
+    <!-- get calcite-web css from the cdn (use latest version) -->
+    <link rel="stylesheet" href="https://s3-us-west-1.amazonaws.com/patterns.esri.com/files/calcite-web/1.0.0-rc.4/css/calcite-web.min.css">
+     <link rel="stylesheet" href="https://js.arcgis.com/3.21/esri/css/esri.css">  
+     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> 
+
+
+    <link rel="stylesheet" href="./style/main.css">
+    <!--[if lt IE 9]>
+      <script src="/assets/javascripts/libs/selectivizr.js"></script>
+      <script src="/assets/javascripts/libs/html5shiv.js"></script>
+    <![endif]-->
+
+    <style>
+          /* @import url(//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css);   */
+    </style>
+    <script>
+        var locationPath = location.origin + location.pathname.replace(/\/[^/]+$/, '');
+        var dojoConfig = {
+            parseOnLoad: true,
+            packages: [
+                {
+                    "name": "modules",
+                    "location": locationPath + '/js/modules'
+                },
+                {
+                    "name": "configs",
+                    "location": locationPath + '/js/configs'
+                },                
+            ]
+        };
+    </script>   
+
+  </head>
+
+  <body>
+
+    <div id="control-dashboard" class="card">
+        
+        <div class="card-content">
+            <div class="text-center app-title-text">
+                <span class='font-size-2'>NYC Cab Rides Map</span>
+                <span class='js-modal-toggle icon-ui-question margin-left-half text-darker-gray font-size--3' data-modal="app-info"></span>
+                <hr>
+            </div>
+
+            <select class="modifier-class select-full select-attr-to-display trailer-half font-size--3">
+                <option value="count_of_trips">Total Rides</option>
+                <option value="avg_of_passengers">Num of Passengers</option>
+                <option value="avg_of_duration_in_min">Ride Time in minutes</option>
+                <option value="pct_of_tips">% of Tips</option>
+                <option value="pct_of_payment_by_card">% Paid with Credit</option>
+                <option value="pct_of_payment_by_cash">% Paid with Cash</option>
+            </select>
+
+            <div class="block-group block-group-2-up trailer-half">
+                <div class="block checkbox-trip-type">
+                    <span class="font-size--3" trip-type="pickup"><i class="fa fa-check-square-o fa-lg margin-right-half" aria-hidden="true"></i>Picked up here</span>
+                </div>
+                <div class="block checkbox-trip-type">
+                    <span class="font-size--3" trip-type="dropoff"><i class="fa fa-square-o fa-lg margin-right-half" aria-hidden="true"></i>Dropped off here</span>
+                </div>
+            </div> 
+
+            <div class="summary-info font-size--3"></div>
+        </div>
+
+        <div class="card-content charts-container">
+
+            <div class="chart-reminder-message font-size--2">
+                <div class='trailer-half'>
+                    <span>Visualize the locations where the most New York cab rides begin, the pick-up locations where cab drivers can expect the largest tips, where in the city passengers pay in cash & where they pay by credit, the number of passengers and the length of journeys.</span>
+                </div>
+                <span class='avenir-bold leader-half'>Click Hexagon to show detailed data</span>
+            </div>
+
+            <div class="trips-by-month-chart-wrap chart-wrap hide">
+                <h6 class='font-size-0 avenir-bold trailer-half'>Summary info for selected area</h6>
+                <span class="text-center font-size--3">Count of trips by month:</span><span class='trips-by-month-val margin-left-quarter font-size--3 avenir-bold'></span>
+                <div id="trips-by-month-chart-div"></div>
+            </div>
+
+            <div class="chart-wrap hide">
+                <span class="text-center font-size--3">Payment by Card vs Cash</span>
+                <div class="payment-chart-wrap">
+                    <div id="payment-chart-div" class='leader-quarter'></div>
+                    <div id="payment-chart-legend-div" class='leader-quarter'>
+                        <div class="legend-item leader-quarter">
+                            <span class="legend-icon by-card"></span>
+                            <span class="margin-left-half font-size--3">card - </span>
+                            <span class="payment-by-card-val margin-left-quarter font-size--3 avenir-bold"></span>
+                        </div>
+                        <div class="legend-item leader-half">
+                            <span class="legend-icon by-cash"></span>
+                            <span class="margin-left-half font-size--3">cash - </span>
+                            <span class="payment-by-cash-val margin-left-quarter font-size--3 avenir-bold"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-wrap leader-quarter hide">
+                <span class="text-center font-size--3">Tipping Rate</span>
+                <div class="tips-chart-wrap">
+                    <div id="tips-chart-div">
+                        <div id="tips-chart-bar"></div>
+                        <span class="tips-chart-label font-size--3 margin-left-quarter avenir-bold">10%</span>
+                    </div>
+                    <span class="left font-size--3 small">0%</span>
+                    <span class="right font-size--3 small">+30%</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- <div class="legend-container font-size--3">
+        </div> -->
+
+    </div>
+
+    <!-- <div id="legend-container" class="card"></div> -->
+    <div class="js-modal modal-overlay modifier-class" data-modal="app-info">
+        <div class="modal-content column-12" role="dialog" aria-labelledby="modal" role="dialog">
+        
+            <a class="js-modal-toggle right" href="#" aria-label="close-modal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 32 32" class="svg-icon"><path d="M18.404 16l9.9 9.9-2.404 2.404-9.9-9.9-9.9 9.9L3.696 25.9l9.9-9.9-9.9-9.898L6.1 3.698l9.9 9.899 9.9-9.9 2.404 2.406-9.9 9.898z"/></svg>
+            </a>
+        
+            <h3 class='trailer-half'>About this app</h3>
+            <p>My coworker <a class='' href='https://twitter.com/John_M_Nelson' target="blank">John Nelson</a> has created a very interesting story map - <a class='' href='https://nation.maps.arcgis.com/apps/Cascade/index.html?appid=6984ffb035ed40b8b11e23f41236aac2' target="blank">Taxi Cab Terrain</a>, 
+                looking at Yellow Cab trip data in New York City from July 2015 - June 2016. 
+                By mapping the data John has been able to pick out how different New York boroughs use and pay for taxi cab journeys. 
+                He then looks at the underlying socio-economic data in those neighborhoods to see if they help explain the differences 
+                in how inhabitants of different New York neighborhoods use and pay for cabs.</p>
+
+            <p>I helped John on this project to process and aggregate the data that he used to create the story map, 
+                which was massive - there are more than 10 millions yellow cab ride in NYC each month, and we have over 130 millions records in total for the entire year...
+                I was able to handle these data using PostgreSQL database, and I thought it would also be nice to visualize these data dynamically, 
+                therefore, I put together this app, the data are queried and aggregated in the back end using Node.js and in the front end, 
+                these data are rendered into thousands of hexagons with different sizes using Canvas Layer inspired by this <a class='' href='https://github.com/Esri/wind-js' target="blank">map</a></p>
+
+            <div class="text-right">
+                <button class="btn btn-clear js-modal-toggle">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="map">
+        <div class="legend-container font-size--3">
+        </div>
+        <div class="loading-indicator">
+            <div class="loading-message" id="loading_message"></div>
+        </div> 
+    </div>
+
+    <script src="js/calcite-web.min.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <!-- <script src="js/d3.v3.min.js"></script> -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="js/queue.v1.min.js"></script>
+    <script src="js/turf.min.js"></script>
+    <script src="js/leaflet.js"></script> 
+    <script src="js/leaflet-knn.min.js"></script> 
+    <script src="https://js.arcgis.com/3.21/"></script>
+    <script src="js/main.js"></script> 
+
+    <!-- interactive patterns need to be initialized -->
+    <script>
+       calcite.init();
+    </script>
+
+  </body>
+</html>
